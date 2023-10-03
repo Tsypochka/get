@@ -10,6 +10,7 @@ troyka = 13
 MaxVoltage = 3.3
 bites = len(dac)
 levels = 2 ** bites
+lamp = [0, 0, 0, 0, 0, 0, 0, 0]
 
 GPIO.setup(dac, GPIO.OUT, initial = GPIO.LOW)
 GPIO.setup(leds, GPIO.OUT, initial = GPIO.LOW)
@@ -30,14 +31,32 @@ def adc():
         time.sleep(0.005)
         compVal = GPIO.input(comp)
         if compVal == 0:
-            value_res = value_res + pow2
+            value_res = temp_value
     return value_res
 try:
     while True:
         value = adc()
         voltage = value / levels * MaxVoltage
         print("Didgital = ", value, "Voltage = ", voltage)
-        GPIO.output(leds, decimal2binary(value))
+        if (value / 253 > 1):
+            lamp = [1, 1, 1, 1, 1, 1, 1, 1]
+        elif (value / 224 > 1):
+            lamp = [0, 1, 1, 1, 1, 1, 1, 1]
+        elif (value / 192 > 1):
+            lamp = [0, 0, 1, 1, 1, 1, 1, 1]
+        elif (value / 160 > 1):
+            lamp = [0, 0, 0, 1, 1, 1, 1, 1]
+        elif (value / 128 > 1):
+            lamp = [0, 0, 0, 0, 1, 1, 1, 1]
+        elif (value / 96 > 1):
+            lamp = [0, 0, 0, 0, 0, 1, 1, 1]
+        elif (value / 64 > 1):
+            lamp = [0, 0, 0, 0, 0, 0, 1, 1]
+        elif (value / 32 > 1):
+            lamp = [0, 0, 0, 0, 0, 0, 0, 1]
+        elif (value < 32):
+            lamp = [0, 0, 0, 0, 0, 0, 0, 0]
+        GPIO.output(leds, lamp)
 finally:
     GPIO.output(dac, 0)
     GPIO.output(troyka, 0)
