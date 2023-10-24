@@ -13,11 +13,11 @@ fig, ax = plt.subplots(figsize=(16, 10), dpi=400)
 ax.set_xlabel('Time, s')
 ax.set_ylabel('Voltage, V')
 plt.xlim(0, max(x) + 1)
-plt.ylim(0, 2.8)
+plt.ylim(min(data), 2.8)
 plt.title('Capacitor Charging and Discharging in RC circuit')
 
-ax.plot(x, data, label='V(t)')
-ax.scatter(x[1::3], data[1::3])
+ax.plot(x, data, marker = 'o', label='V(t)', markevery=10)
+#ax.scatter(x[1::3], data[1::3])
 plt.legend()
 
 plt.minorticks_on() #turn on minorsticks 
